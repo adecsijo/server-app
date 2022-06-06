@@ -1,12 +1,13 @@
 package org.thesis.repositories;
 
+import org.thesis.entities.ShoppingList;
+
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
 @ApplicationScoped
-public class ShoppingListRepository {
+public class ShoppingListRepository extends Repository<ShoppingList, Integer> {
 
-    @Inject
-    EntityManager em;
+    protected ShoppingListRepository() {
+        super(ShoppingList.class);
+    }
 }

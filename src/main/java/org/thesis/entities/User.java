@@ -47,10 +47,8 @@ public class User {
     private List<ShoppingListByUser> shoppingListByUser = new ArrayList<>();
 
     public User newUser() {
-        User user = new User();
-        user.setUsername(this.username);
-        user.setPassword(BcryptUtil.bcryptHash(this.password));
-        return user;
+        this.setPassword(BcryptUtil.bcryptHash(this.getPassword()));
+        return this;
     }
 
     @PrePersist

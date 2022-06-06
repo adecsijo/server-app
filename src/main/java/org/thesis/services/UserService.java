@@ -29,25 +29,40 @@ public class UserService {
     private static final Logger LOGGER = Logger.getLogger(UserService.class.getName());
 
     public List<User> getAllUser() {
-        return userRepository.getAllUser();
+        return userRepository.findAll();
     }
 
     public void registration(UserDto userDto) throws SimpleException {
-        if (userRepository.findUser(userDto.getUsername()) != null) {
+        if (userRepository.findById(userDto.getUsername()) != null) {
             throw new SimpleException(USERNAME_ERROR);
         }
-        userRepository.saveUser(userMapper.map(userDto).newUser());
+        userRepository.save(userMapper.map(userDto).newUser());
     }
 
     public SimpleStringDto login(final UserDto userDto) throws SimpleException {
         try {
-            User user = userRepository.findUser(userDto.getUsername());
+            User user = userRepository.findById(userDto.getUsername());
             if (BcryptUtil.matches(userDto.getPassword(), user.getPassword())) {
                 return new SimpleStringDto(getBasicAuth(userDto));
             } else {
                 throw new SimpleException(USERNAME_AND_PASSWORD_ERROR);
             }
         } catch (Exception e) {
+            throw new SimpleException(USERNAME_AND_PASSWORD_ERROR);
+        }
+    }
+
+    public SimpleStringDto modifyUser(String actualUsername, UserDto userDto) throws SimpleException {
+        try {
+            User user = userRepository.findById(actualUsername);
+            if (null == user) {
+                throw new SimpleException(USERNAME_AND_PASSWORD_ERROR);
+            }
+            userRepository.delete(user);
+            userRepository.save(userMapper.map(userDto).newUser());
+            return new SimpleStringDto(getBasicAuth(userDto));
+        } catch (Exception e) {
+            e.printStackTrace();
             throw new SimpleException(USERNAME_AND_PASSWORD_ERROR);
         }
     }

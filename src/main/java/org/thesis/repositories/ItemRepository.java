@@ -1,12 +1,13 @@
 package org.thesis.repositories;
 
+import org.thesis.entities.Item;
+
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
 @ApplicationScoped
-public class ItemRepository {
+public class ItemRepository extends Repository<Item, Integer> {
 
-    @Inject
-    EntityManager em;
+    protected ItemRepository() {
+        super(Item.class);
+    }
 }
