@@ -60,7 +60,6 @@ public class UserResource {
         try {
             return Response.ok(userService.modifyUser(securityContext.getUserPrincipal().getName(), userDto)).build();
         } catch (SimpleException e) {
-            //System.out.println(Arrays.toString(e.getStackTrace()));
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new SimpleStringDto(e.getMessage())).build();
         } catch (Exception e) {

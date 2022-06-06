@@ -30,7 +30,4 @@ public class ShoppingListByUser {
 
     @Column(name = "NAME", nullable = false)
     private String name;
-
-    @Column(name = "ACTIVE")
-    private Boolean active;
 }

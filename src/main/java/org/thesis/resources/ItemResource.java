@@ -1,10 +1,11 @@
 package org.thesis.resources;
 
 import io.quarkus.security.Authenticated;
+import org.thesis.dtos.ItemDto;
 import org.thesis.dtos.SimpleStringDto;
 import org.thesis.dtos.UnitDto;
 import org.thesis.exceptions.SimpleException;
-import org.thesis.services.UnitService;
+import org.thesis.services.ItemService;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -16,18 +17,18 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import java.util.Arrays;
 
-@Path("/unit")
 @Authenticated
-public class UnitResource {
+@Path("/item")
+public class ItemResource {
 
     @Inject
-    UnitService unitService;
+    ItemService itemService;
 
     @GET
     @RolesAllowed({"basic", "admin"})
-    public Response getAllUnit() {
+    public Response getAllItem() {
         try {
-            return Response.ok(unitService.getAllUnit()).build();
+            return Response.ok(itemService.getAllItem()).build();
         } catch (SimpleException e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
             return Response.status(Response.Status.BAD_REQUEST)
@@ -40,9 +41,9 @@ public class UnitResource {
 
     @POST
     @RolesAllowed({"basic", "admin"})
-    public Response addNewUnit(UnitDto unitDto) {
+    public Response addNewItem(ItemDto itemDto) {
         try {
-            unitService.addNewUnit(unitDto);
+            itemService.addNewItem(itemDto);
             return Response.noContent().build();
         } catch (SimpleException e) {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -55,9 +56,9 @@ public class UnitResource {
 
     @PUT
     @RolesAllowed({"basic", "admin"})
-    public Response modifyUnit(UnitDto unitDto) {
+    public Response modifyItem(ItemDto itemDto) {
         try {
-            unitService.modifyUnit(unitDto);
+            itemService.modifyItem(itemDto);
             return Response.noContent().build();
         } catch (SimpleException e) {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -70,9 +71,9 @@ public class UnitResource {
 
     @DELETE
     @RolesAllowed("admin")
-    public Response deleteUnit(UnitDto unitDto) {
+    public Response deleteItem(ItemDto itemDto) {
         try {
-            unitService.deleteUnit(unitDto);
+            itemService.deleteItem(itemDto);
             return Response.noContent().build();
         } catch (SimpleException e) {
             return Response.status(Response.Status.BAD_REQUEST)

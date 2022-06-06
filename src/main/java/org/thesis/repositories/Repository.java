@@ -25,7 +25,6 @@ public class Repository<T, ID> {
     @Transactional
     public List<T> findByField(String fieldName, Object fieldValue) {
         String query = "select t from " + clazz.getSimpleName() + " t where " + fieldName + " =? 1";
-        System.out.println(query);
         return em.createQuery(query, clazz)
                 .setParameter(1, fieldValue)
                 .getResultList();
@@ -58,5 +57,11 @@ public class Repository<T, ID> {
     public boolean existsByField(String fieldName, Object fieldValue) {
         Collection<T> byField = findByField(fieldName, fieldValue);
         return null != byField && !byField.isEmpty();
+    }
+
+    @Transactional
+    public T update(T entity) {
+        em.merge(entity);
+        return entity;
     }
 }
