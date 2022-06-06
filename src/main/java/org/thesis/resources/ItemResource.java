@@ -3,7 +3,6 @@ package org.thesis.resources;
 import io.quarkus.security.Authenticated;
 import org.thesis.dtos.ItemDto;
 import org.thesis.dtos.SimpleStringDto;
-import org.thesis.dtos.UnitDto;
 import org.thesis.exceptions.SimpleException;
 import org.thesis.services.ItemService;
 
@@ -15,7 +14,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-import java.util.Arrays;
 
 @Authenticated
 @Path("/item")
@@ -30,11 +28,10 @@ public class ItemResource {
         try {
             return Response.ok(itemService.getAllItem()).build();
         } catch (SimpleException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new SimpleStringDto(e.getMessage())).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+            return Response.serverError()
                     .entity(new SimpleStringDto(e.toString())).build();
         }
     }
@@ -49,7 +46,7 @@ public class ItemResource {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new SimpleStringDto(e.getMessage())).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+            return Response.serverError()
                     .entity(new SimpleStringDto(e.toString())).build();
         }
     }
@@ -64,7 +61,7 @@ public class ItemResource {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new SimpleStringDto(e.getMessage())).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+            return Response.serverError()
                     .entity(new SimpleStringDto(e.toString())).build();
         }
     }
@@ -79,7 +76,7 @@ public class ItemResource {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new SimpleStringDto(e.getMessage())).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+            return Response.serverError()
                     .entity(new SimpleStringDto(e.toString())).build();
         }
     }

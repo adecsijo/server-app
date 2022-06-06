@@ -14,7 +14,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import java.util.Arrays;
 
 @Path("/user")
 public class UserResource {
@@ -33,9 +32,8 @@ public class UserResource {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new SimpleStringDto(e.getMessage())).build();
         } catch (Exception e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new SimpleStringDto(e.getMessage())).build();
+            return Response.serverError()
+                    .entity(new SimpleStringDto(e.toString())).build();
         }
     }
 
@@ -49,8 +47,8 @@ public class UserResource {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new SimpleStringDto(e.getMessage())).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new SimpleStringDto(e.getMessage())).build();
+            return Response.serverError()
+                    .entity(new SimpleStringDto(e.toString())).build();
         }
     }
 
@@ -63,8 +61,8 @@ public class UserResource {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new SimpleStringDto(e.getMessage())).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(new SimpleStringDto(e.getMessage())).build();
+            return Response.serverError()
+                    .entity(new SimpleStringDto(e.toString())).build();
         }
     }
 }

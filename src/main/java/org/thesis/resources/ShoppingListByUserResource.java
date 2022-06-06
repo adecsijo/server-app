@@ -32,11 +32,10 @@ public class ShoppingListByUserResource {
         try {
             return Response.ok(shoppingListByUserService.getAllShoppingListByUser(securityContext.getUserPrincipal().getName())).build();
         } catch (SimpleException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new SimpleStringDto(e.getMessage())).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+            return Response.serverError()
                     .entity(new SimpleStringDto(e.toString())).build();
         }
     }
@@ -51,7 +50,7 @@ public class ShoppingListByUserResource {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new SimpleStringDto(e.getMessage())).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+            return Response.serverError()
                     .entity(new SimpleStringDto(e.toString())).build();
         }
     }
@@ -66,7 +65,7 @@ public class ShoppingListByUserResource {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new SimpleStringDto(e.getMessage())).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+            return Response.serverError()
                     .entity(new SimpleStringDto(e.toString())).build();
         }
     }
@@ -81,7 +80,7 @@ public class ShoppingListByUserResource {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new SimpleStringDto(e.getMessage())).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+            return Response.serverError()
                     .entity(new SimpleStringDto(e.toString())).build();
         }
     }

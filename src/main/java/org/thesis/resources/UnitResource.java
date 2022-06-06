@@ -14,7 +14,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-import java.util.Arrays;
 
 @Path("/unit")
 @Authenticated
@@ -29,11 +28,10 @@ public class UnitResource {
         try {
             return Response.ok(unitService.getAllUnit()).build();
         } catch (SimpleException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new SimpleStringDto(e.getMessage())).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+            return Response.serverError()
                     .entity(new SimpleStringDto(e.toString())).build();
         }
     }
@@ -48,7 +46,7 @@ public class UnitResource {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new SimpleStringDto(e.getMessage())).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+            return Response.serverError()
                     .entity(new SimpleStringDto(e.toString())).build();
         }
     }
@@ -63,7 +61,7 @@ public class UnitResource {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new SimpleStringDto(e.getMessage())).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+            return Response.serverError()
                     .entity(new SimpleStringDto(e.toString())).build();
         }
     }
@@ -78,7 +76,7 @@ public class UnitResource {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new SimpleStringDto(e.getMessage())).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+            return Response.serverError()
                     .entity(new SimpleStringDto(e.toString())).build();
         }
     }
