@@ -13,9 +13,6 @@ import javax.servlet.http.HttpFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * @author <a href="mailto:kabir.khan@jboss.com">Kabir Khan</a>
- */
 @WebFilter(urlPatterns = "/*")
 public class Filter extends HttpFilter {
 
