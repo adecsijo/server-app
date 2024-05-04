@@ -5,6 +5,7 @@ import org.thesis.entities.ShoppingList;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import java.util.List;
 
 @ApplicationScoped
 public class ShoppingListRepository extends Repository<ShoppingList, Integer> {
@@ -16,20 +17,19 @@ public class ShoppingListRepository extends Repository<ShoppingList, Integer> {
         super(ShoppingList.class);
     }
 
-    public boolean existsByListIdAndItemId(Integer listId, Integer itemId) {
-        return em.createQuery("select e from ShoppingList e where e.shoppingListByUser.id =? 1 and e.item.id =? 2",
-                        ShoppingList.class)
-                .setParameter(1, listId)
-                .setParameter(2, itemId)
-                .getResultStream()
-                .findFirst().isPresent();
+    public List<ShoppingList> findAllByUser(String username) {
+        return em.createQuery("select e from ShoppingList e where e.user.username =? 1",
+                ShoppingList.class)
+                .setParameter(1, username)
+                .getResultList();
     }
 
-    public ShoppingList findByListIdAndItemId(Integer listId, Integer itemId) {
-        return em.createQuery("select e from ShoppingList e where e.shoppingListByUser.id =? 1 and e.item.id =? 2",
-                ShoppingList.class)
-                .setParameter(1, listId)
-                .setParameter(2, itemId)
-                .getSingleResult();
+    public boolean existsByUserAndName(String username, String name) {
+        return em.createQuery("select e from ShoppingList e where e.user.username =? 1 and e.name =? 2",
+                        ShoppingList.class)
+                .setParameter(1, username)
+                .setParameter(2, name)
+                .getResultStream()
+                .findFirst().isPresent();
     }
 }

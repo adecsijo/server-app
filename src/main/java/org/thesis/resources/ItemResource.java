@@ -2,17 +2,12 @@ package org.thesis.resources;
 
 import io.quarkus.security.Authenticated;
 import org.thesis.dtos.ItemDto;
-import org.thesis.dtos.SimpleStringDto;
 import org.thesis.exceptions.SimpleException;
 import org.thesis.services.ItemService;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 @Authenticated
@@ -24,60 +19,47 @@ public class ItemResource {
 
     @GET
     @RolesAllowed({"basic", "admin"})
-    public Response getAllItem() {
+    @Path("/{listId}")
+    public Response getAllItem(@PathParam("listId") Integer listId) {
         try {
-            return Response.ok(itemService.getAllItem()).build();
+            return Response.ok(itemService.getAllItemByListId(listId)).build();
         } catch (SimpleException e) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new SimpleStringDto(e.getMessage())).build();
+                    .entity(e.getMessage()).build();
         } catch (Exception e) {
             return Response.serverError()
-                    .entity(new SimpleStringDto(e.toString())).build();
+                    .entity(e.toString()).build();
         }
     }
 
     @POST
     @RolesAllowed({"basic", "admin"})
-    public Response addNewItem(ItemDto itemDto) {
+    @Path("/{listId}")
+    public Response addNewItem(@PathParam("listId") Integer listId, ItemDto itemDto) {
         try {
-            itemService.addNewItem(itemDto);
+            itemService.addNewItem(listId, itemDto);
             return Response.noContent().build();
         } catch (SimpleException e) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new SimpleStringDto(e.getMessage())).build();
+                    .entity(e.getMessage()).build();
         } catch (Exception e) {
             return Response.serverError()
-                    .entity(new SimpleStringDto(e.toString())).build();
-        }
-    }
-
-    @PUT
-    @RolesAllowed({"basic", "admin"})
-    public Response modifyItem(ItemDto itemDto) {
-        try {
-            itemService.modifyItem(itemDto);
-            return Response.noContent().build();
-        } catch (SimpleException e) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new SimpleStringDto(e.getMessage())).build();
-        } catch (Exception e) {
-            return Response.serverError()
-                    .entity(new SimpleStringDto(e.toString())).build();
+                    .entity(e.toString()).build();
         }
     }
 
     @DELETE
-    @RolesAllowed("admin")
+    @RolesAllowed({"basic", "admin"})
     public Response deleteItem(ItemDto itemDto) {
         try {
             itemService.deleteItem(itemDto);
             return Response.noContent().build();
         } catch (SimpleException e) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new SimpleStringDto(e.getMessage())).build();
+                    .entity(e.getMessage()).build();
         } catch (Exception e) {
             return Response.serverError()
-                    .entity(new SimpleStringDto(e.toString())).build();
+                    .entity(e.toString()).build();
         }
     }
 }

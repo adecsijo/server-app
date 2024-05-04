@@ -4,11 +4,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.io.Serializable;
 
 @Getter @Setter @NoArgsConstructor
-public class ShoppingListDto {
-    private Integer listId;
-    private List<ItemDetailsDto> items;
+public class ShoppingListDto implements Serializable {
 
+    private Integer id;
+    private String name;
+    private String description;
 }

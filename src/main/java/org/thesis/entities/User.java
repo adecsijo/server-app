@@ -9,13 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,36 +19,40 @@ import java.util.List;
 @Getter @Setter @NoArgsConstructor
 @UserDefinition
 public class User {
+
     private static final String ADMIN = "admin";
     private static final String BASIC = "basic";
+
     @Id
     @Column(name = "USERNAME", nullable = false)
     @Username
     private String username;
 
-    @Column(name = "PASSWORD", nullable = false)
+    @Column(name = "PWD", nullable = false)
     @Password
     private String password;
 
     @Column(name = "LAST_SUCCESSFUL_LOGIN")
     private LocalDateTime lastSuccessfulLogin;
 
-    @Column(name = "ROLE")
+    @Column(name = "ROLES")
     @Roles
     private String role;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<ShoppingListByUser> shoppingListByUser = new ArrayList<>();
+    private List<ShoppingList> shoppingList = new ArrayList<>();
 
-    public User newUser() {
+    public User  newUserPass() {
         this.setPassword(BcryptUtil.bcryptHash(this.getPassword()));
         return this;
     }
 
     @PrePersist
+    @PreUpdate
     private void prePersist() {
         if (!ADMIN.equals(this.role)) {
             this.role = BASIC;
         }
+        lastSuccessfulLogin = LocalDateTime.now();
     }
 }

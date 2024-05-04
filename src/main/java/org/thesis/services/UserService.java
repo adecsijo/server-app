@@ -1,18 +1,15 @@
 package org.thesis.services;
 
 import io.quarkus.elytron.security.common.BcryptUtil;
-import org.thesis.dtos.SimpleStringDto;
 import org.thesis.dtos.UserDto;
 import org.thesis.entities.User;
 import org.thesis.exceptions.SimpleException;
-import org.thesis.mappers.UserMapper;
 import org.thesis.repositories.UserRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.time.LocalDateTime;
 import java.util.Base64;
-import java.util.List;
-import java.util.logging.Logger;
 
 @ApplicationScoped
 public class UserService {
@@ -23,27 +20,20 @@ public class UserService {
     @Inject
     UserRepository userRepository;
 
-    @Inject
-    UserMapper userMapper;
-
-    private static final Logger LOGGER = Logger.getLogger(UserService.class.getName());
-
-    public List<User> getAllUser() {
-        return userRepository.findAll();
-    }
-
     public void registration(UserDto userDto) throws SimpleException {
         if (userRepository.findById(userDto.getUsername()) != null) {
             throw new SimpleException(USERNAME_ERROR);
         }
-        userRepository.save(userMapper.map(userDto).newUser());
+        userRepository.save(map(userDto).newUserPass());
     }
 
-    public SimpleStringDto login(final UserDto userDto) throws SimpleException {
+    public String login(final UserDto userDto) throws SimpleException {
         try {
             User user = userRepository.findById(userDto.getUsername());
             if (BcryptUtil.matches(userDto.getPassword(), user.getPassword())) {
-                return new SimpleStringDto(getBasicAuth(userDto));
+                user.setLastSuccessfulLogin(LocalDateTime.now());
+                userRepository.update(user);
+                return getBasicAuth(userDto);
             } else {
                 throw new SimpleException(USERNAME_AND_PASSWORD_ERROR);
             }
@@ -52,15 +42,14 @@ public class UserService {
         }
     }
 
-    public SimpleStringDto modifyUser(String actualUsername, UserDto userDto) throws SimpleException {
+    public String modifyUser(String actualUsername, UserDto userDto) throws SimpleException {
         try {
             User user = userRepository.findById(actualUsername);
             if (null == user) {
                 throw new SimpleException(USERNAME_AND_PASSWORD_ERROR);
             }
-            userRepository.delete(user);
-            userRepository.save(userMapper.map(userDto).newUser());
-            return new SimpleStringDto(getBasicAuth(userDto));
+            userRepository.update(map(userDto).newUserPass());
+            return getBasicAuth(userDto);
         } catch (Exception e) {
             e.printStackTrace();
             throw new SimpleException(USERNAME_AND_PASSWORD_ERROR);
@@ -68,7 +57,24 @@ public class UserService {
     }
 
     private String getBasicAuth(final UserDto userDto) {
-        final String basicAuth = userDto.getUsername() + ":" + userDto.getPassword();
-        return Base64.getEncoder().encodeToString(basicAuth.getBytes());
+        return "Basic "+ Base64.getEncoder().encodeToString((userDto.getUsername() + ":" + userDto.getPassword()).getBytes());
+    }
+
+    private UserDto map(final User user) {
+        UserDto userDto = new UserDto();
+        userDto.setUsername(user.getUsername());
+        userDto.setPassword(user.getPassword());
+        userDto.setRole(user.getRole());
+        userDto.setLastSuccessfulLogin(user.getLastSuccessfulLogin());
+        return userDto;
+    }
+
+    private User map(final UserDto userDto) {
+        User user = new User();
+        user.setUsername(userDto.getUsername());
+        user.setPassword(userDto.getPassword());
+        user.setRole(userDto.getRole());
+        user.setLastSuccessfulLogin(userDto.getLastSuccessfulLogin());
+        return user;
     }
 }

@@ -1,6 +1,5 @@
 package org.thesis.resources;
 
-import org.thesis.dtos.SimpleStringDto;
 import org.thesis.dtos.UserDto;
 import org.thesis.exceptions.SimpleException;
 import org.thesis.services.UserService;
@@ -30,10 +29,10 @@ public class UserResource {
             return Response.noContent().build();
         } catch (SimpleException e) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new SimpleStringDto(e.getMessage())).build();
+                    .entity(e.getMessage()).build();
         } catch (Exception e) {
             return Response.serverError()
-                    .entity(new SimpleStringDto(e.toString())).build();
+                    .entity(e.toString()).build();
         }
     }
 
@@ -45,10 +44,10 @@ public class UserResource {
             return Response.ok(userService.login(userDto)).build();
         } catch (SimpleException e) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new SimpleStringDto(e.getMessage())).build();
+                    .entity(e.getMessage()).build();
         } catch (Exception e) {
             return Response.serverError()
-                    .entity(new SimpleStringDto(e.toString())).build();
+                    .entity(e.toString()).build();
         }
     }
 
@@ -59,10 +58,10 @@ public class UserResource {
             return Response.ok(userService.modifyUser(securityContext.getUserPrincipal().getName(), userDto)).build();
         } catch (SimpleException e) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(new SimpleStringDto(e.getMessage())).build();
+                    .entity(e.getMessage()).build();
         } catch (Exception e) {
             return Response.serverError()
-                    .entity(new SimpleStringDto(e.toString())).build();
+                    .entity(e.toString()).build();
         }
     }
 }
